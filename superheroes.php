@@ -63,10 +63,37 @@ $superheroes = [
   ], 
 ];
 
+//  Get and sanitize the query
+$query = isset($_GET['query']) ? trim($_GET['query']) : '';
+$query = htmlspecialchars($query, ENT_QUOTES, 'UTF-8');
+
+if ($query === '') {
+    // 2a. Blank search: return the full list
+    echo "<ul>";
+    foreach ($superheroes as $hero) {
+        echo "<li>" . $hero['alias'] . "</li>";
+    }
+    echo "</ul>";
+} else {
+    //  Look for a matching hero
+    $found = null;
+    foreach ($superheroes as $hero) {
+        if (strcasecmp($hero['alias'], $query) === 0 ||
+            strcasecmp($hero['name'], $query) === 0) {
+            $found = $hero;
+            break;
+        }
+    }
+
+    if ($found) {
+        echo "<h3>" . $found['alias'] . "</h3>";
+        echo "<h4>A.K.A " . $found['name'] . "</h4>";
+        echo "<p>" . $found['biography'] . "</p>";
+    } else {
+        echo "<p class='not-found'>Superhero not found</p>";
+    }
+}
 ?>
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+
+

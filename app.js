@@ -1,12 +1,15 @@
 document.getElementById("search-btn").addEventListener("click", function () {
-  fetch("superheroes.php")
+  const input = document.getElementById("search-input");
+  const query = input.value.trim();
+
+  fetch("superheroes.php?query=" + encodeURIComponent(query))
     .then(function (response) {
       return response.text();
     })
     .then(function (data) {
-      alert(data);
+      document.getElementById("result").innerHTML = data;
     })
     .catch(function (error) {
-      alert("Something went wrong: " + error);
+      document.getElementById("result").innerHTML = "Something went wrong.";
     });
 });
